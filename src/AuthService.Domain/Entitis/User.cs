@@ -41,6 +41,6 @@ public class User
     public UserProfile UserProfile { get; set; } = null!;
     public ICollection<UserRole> UserRoles { get; set; } = [];
     public UserEmail UserEmail { get; set; } = null!;
-    public UserPasswordReset PasswordReset {get; set; } = null!;
+    public UserPasswordReset UserPasswordReset {get; set; } = null!;
     
 }
