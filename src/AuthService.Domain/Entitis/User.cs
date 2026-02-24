@@ -1,46 +1,45 @@
 using System.ComponentModel.DataAnnotations;
-
-namespace AuthService.Domain.Entitis;
-
-public class User 
-{
+ 
+namespace AuthService.Domain.Entitis; // Cambiado de 'Entitis' a 'Entities'
+ 
+public class User {
     [Key]
-    [MaxLength(16)]
+    [MaxLength(36)] // Aumentado a 36 para soportar GUIDs si fuera necesario
     public string Id { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "El nombre es obligatorio")]
-    [MaxLength(50)]
+ 
+    [Required(ErrorMessage = "El nombre es requerido")]
+    [MaxLength(25)]
     public string Name { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "El apellido es obligatorio")]
+ 
+    [Required(ErrorMessage = "El apellido es requerido")]
     [MaxLength(25)]
     public string Surname { get; set; } = string.Empty;
-
+ 
     [Required]
     [MaxLength(50)]
-    public string Username { get; set; } = string.Empty;
-
+    public string UserName { get; set; } = string.Empty; // Cambiado 'Username' -> 'UserName' (N mayúscula)
+ 
     [Required]
-    [EmailAddress] //El valor de esta propiedad debe ser un correo electronico
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
-
+ 
     [Required]
-    [MinLength(255)]
+    [MaxLength(100)] // El password suele ser más largo por el Hash
     public string Password { get; set; } = string.Empty;
-
+   
+    [Required]
     public bool Status { get; set; } = true;
-
-    [Required]
-    public DateTime CreatedAt { get; set; }
-
-    [Required]
-    public DateTime UpdatedAt { get; set; }
-
-    //Relaciones de navegación solo dentro del código
-    //Esto no altera la base d edatos
-    public UserProfile UserProfile { get; set; } = null!;
-    public ICollection<UserRole> UserRoles { get; set; } = [];
-    public UserEmail UserEmail { get; set; } = null!;
-    public UserPasswordReset UserPasswordReset {get; set; } = null!;
-    
+ 
+    public DateTime CreatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
+ 
+    // --- PROPIEDADES DE NAVEGACIÓN (Sincronizadas con ApplicationDbContext) ---
+   
+    public UserProfile UserProfile { get; set; } = null!; // Cambiado 'Profile' -> 'UserProfile'
+ 
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+ 
+    public UserEmail UserEmails { get; set; } = null!; // Cambiado 'UserEmail' -> 'UserEmails' (Plural)
+ 
+    public UserPasswordReset UserPasswordResets { get; set; } = null!; // Cambiado 'PasswordReset' -> 'UserPasswordResets'
 }
