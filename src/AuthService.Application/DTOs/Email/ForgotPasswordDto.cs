@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
  
-namespace AuthService.Application.Dtos.Email;
+namespace AuthService.Application.DTOs.Email;
  
 public class ForgotPasswordDto
 {
-    [Required(ErrorMessage = "Email es obligatorio.")]
-    [EmailAddress(ErrorMessage = "Email no es válido.")]
- 
+    [Required(ErrorMessage = "El email es obligatorio")]
+    [EmailAddress(ErrorMessage = "El email debe ser válido")]
     public string Email { get; set; } = string.Empty;
 }
+ 

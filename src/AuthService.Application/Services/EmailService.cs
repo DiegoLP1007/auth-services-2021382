@@ -4,52 +4,53 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using AuthService.Application.Interfaces;
- 
+
 namespace AuthService.Application.Services;
- 
+
 public class EmailService(IConfiguration configuration, ILogger<EmailService> logger) : IEmailService
 {
     public async Task SendEmailVerificationAsync(string email, string username, string token)
     {
         var subject = "Verify your email address";
         var verificationUrl = $"{configuration["AppSettings:FrontendUrl"]}/verify-email?token={token}";
- 
+
         var body = $@"
-<h2>Welcome {username}!</h2>
-<p>Please verify your email address by clicking the link below:</p>
-<a href='{verificationUrl}' style='background-color: #007bff; color: white; padding: 10px; text-decoration: none; border-radius: 5px;'>
+            <h2>Welcome {username}!</h2>
+            <p>Please verify your email address by clicking the link below:</p>
+            <a href='{verificationUrl}' style='background-color: #007bff; color: white; padding: 10px; text-decoration: none; border-radius: 5px;'>
                 Verify Email
-</a>
-<p>If you cannot click the link, copy and paste this URL into your browser:</p>
-<p>{verificationUrl}</p>
-<p>This link will expire in 24 hours.</p>
-<p>If you didn't create an account, please ignore this email.</p>
+            </a>
+            <p>If you cannot click the link, copy and paste this URL into your browser:</p>
+            <p>{verificationUrl}</p>
+            <p>This link will expire in 24 hours.</p>
+            <p>If you didn't create an account, please ignore this email.</p>
         ";
- 
+
         await SendEmailAsync(email, subject, body);
     }
- 
+
     public async Task SendPasswordResetAsync(string email, string username, string token)
     {
         var subject = "Reset your password";
         var resetUrl = $"{configuration["AppSettings:FrontendUrl"]}/reset-password?token={token}";
- 
+
         var body = $@"
-<h2>Password Reset Request</h2>
-<p>Hello {username},</p>
-<p>You requested to reset your password. Click the link below to reset it:</p>
-<a href='{resetUrl}' style='background-color: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>
+            <h2>Password Reset Request</h2>
+            <p>Hello {username},</p>
+            <p>You requested to reset your password. Click the link below to reset it:</p>
+            <a href='{resetUrl}' style='background-color: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>
                 Reset Password
-</a>
-<p>If you cannot click the link, copy and paste this URL into your browser:</p>
-<p>{resetUrl}</p>
-<p>This link will expire in 1 hour.</p>
-<p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>
+            </a>
+            <p>If you cannot click the link, copy and paste this URL into your browser:</p>
+            <p>{resetUrl}</p>
+            <p>This link will expire in 1 hour.</p>
+            <p>If you didn't request this, please ignore this email and your password will remain unchanged.</p>
         ";
- 
+
         await SendEmailAsync(email, subject, body);
     }
-    public async Task SendWelcomeEmailAsync(string email, string username)
+
+  public async Task SendWelcomeEmailAsync(string email, string username)
     {
         var subject = "Welcome to AuthDotnet!";
  
@@ -64,7 +65,13 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
         await SendEmailAsync(email, subject, body);
     }
 
-    private async Task SendEmailAsync(string to, string subject, string body)
+
+
+
+
+
+
+private async Task SendEmailAsync(string to, string subject, string body)
     {
         var smtpSettings = configuration.GetSection("SmtpSettings");
  
@@ -169,4 +176,5 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
             throw new InvalidOperationException($"Failed to send email: {ex.Message}", ex);
         }
     }
+
 }

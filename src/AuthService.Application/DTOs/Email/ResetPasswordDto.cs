@@ -1,17 +1,16 @@
 using System.ComponentModel.DataAnnotations;
  
-namespace AuthService.Application.Dtos.Email;
+namespace AuthService.Application.DTOs.Email;
  
 public class ResetPasswordDto
 {
-    [Required(ErrorMessage = "Email es obligatorio.")]
- 
+    [Required(ErrorMessage = "El email es obligatorio")]
     public string Email { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Token es obligatorio.")]
  
+    [Required(ErrorMessage = "El token es obligatorio")]
     public string ResetToken { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Nueva contraseña es obligatoria.")]
-    [MinLength(8, ErrorMessage = "La nueva contraseña debe tener al menos 8 caracteres.")]
-   
+ 
+    [Required(ErrorMessage = "La nueva contraseña es obligatoria")]
+    [MinLength(8, ErrorMessage = "La nueva contraseña debe tener al menos 8 caracteres")]
     public string NewPassword { get; set; } = string.Empty;
 }
