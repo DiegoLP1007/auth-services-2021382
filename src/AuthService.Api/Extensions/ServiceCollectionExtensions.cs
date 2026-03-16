@@ -1,26 +1,29 @@
-using AuthService.Application.Interfaces;
-using AuthService.Application.Services;
-using AuthService.Domain.Entities;
-using AuthService.Domain.Constants;
 using AuthService.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
-
-namespace AuthService.Api.Extensions;
-
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services, 
-        IConfiguration configuration)
+       public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-       services.AddDbContext<ApplicationDbContext>(options =>
+        // Configure PostgreSQL database
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-                .UseSnakeCaseNamingConvention());
+                   .UseSnakeCaseNamingConvention());
 
-        // INICIALIZANDO EL SERVICIO DE EMAIL
-        services.AddScoped<IEmailService, EmailService>();
+				// Aquí también se registran los repositorios
+        // services.AddScoped<IUserRepository, UserRepository>();
+        
+        // Configure health checks
+        services.AddHealthChecks();public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+{
+    services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
+                   .UseSnakeCaseNamingConvention());
 
-        services.AddHealthChecks();
+    services.AddHealthChecks();
+
+    return services;
+}
 
         return services;
     }

@@ -1,52 +1,14 @@
 using AuthService.Api.Extensions;
 using AuthService.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+// Agrega antes de var app =builder.Build()
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddControllers();
-
-
-
-
-// Mantenemos el registro por si lo usas en otros lados, 
-// pero no lo forzaremos al arrancar.
+// CONFIGURACIÓN DE SERVICIOS POR MEDIO DE MÉTODOS DE EXTENSIÓN
 builder.Services.AddApplicationServices(builder.Configuration);
 
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-app.MapControllers();
-
-var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        )).ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
-/* COMENTAMOS ESTA SECCIÓN TEMPORALMENTE 
-   Para que no te dé el error de password de Postgres al iniciar.
-*/
-/*
+// ---------------------------------------------------------------------
+// Agrega antes de app.run()
+// Initialize database and seed data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -54,21 +16,19 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        logger.LogInformation("Iniciando migracion de la base de datos...");
-        await context.Database.EnsureCreatedAsync(); 
+        logger.LogInformation("Checking database connection...");
+
+        // Ensure database is created (similar to Sequelize sync in Node.js)
+        await context.Database.EnsureCreatedAsync();
+
+        logger.LogInformation("Database ready. Running seed data...");
         await DataSeeder.SeedAsync(context);
-        logger.LogInformation("Datos iniciales cargados exitosamente");
+
+        logger.LogInformation("Database initialization completed successfully");
     }
-    catch(Exception es)
+    catch (Exception ex)
     {
-        logger.LogError(es, "Error al inicializar la base de datos");
+        logger.LogError(ex, "An error occurred while initializing the database");
+        throw; // Re-throw to stop the application
     }
-}
-*/
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    }

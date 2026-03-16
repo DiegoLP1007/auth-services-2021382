@@ -1,19 +1,39 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace AuthService.Domain.Entities;
 
-    public class Role
-    {
+public class Role
+{
+    [Key]
+    [MaxLength(16)]
+    public string Id { get; set; } = string.Empty;
 
-      [Key]
-      [MaxLength(16)]
-     public string Id { get; set; } = string.Empty;
-      [Required]
-      [MaxLength(50)]
-       public string Name { get; set; } = string.Empty;
-      [Required]
-      [MaxLength(255)]
-         public string Description { get; set; } = string.Empty;
+    [Required(ErrorMessage = "El nombre del rol es obligatorio.")]
+    [MaxLength(100, Erusing System.ComponentModel.DataAnnotations;
 
-// Relación con UserRole
-         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
-    }
+namespace AuthService.Domain.Entities;
+
+public class Role
+{
+[Key]
+[MaxLength(16)]
+public string Id { get; set; } = string.Empty;
+
+[Required]
+[MaxLength(50)]
+public string Name { get; set; } = string.Empty;
+
+[MaxLength(255)]
+public string Description { get; set; } = string.Empty;
+
+// Relación
+public ICollection<UserRole> UserRoles { get; set; } = [];
+}rorMessage = "El nombre del rol no puede superar los 100 caracteres.")]
+    public string Name { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public ICollection<UserRole> UserRoles { get; set; } = [];
+}
